@@ -21,7 +21,6 @@ exports.createStuff = (req, res, next) => {
       });
     }
   );
-
 }
 
 exports.getAllStuff = (req, res, next) => {
@@ -57,6 +56,27 @@ exports.getOneStuff = (req, res, next) => {
 }
 
 exports.modifyStuff = (req, res, next) => {
+  const stuff = new Stuff({
+    _id : req.params.id,
+    titre : req.body.titre,
+    sousTitre : req.body.sousTitre,
+    description : req.body.description,
+    prix : req.body.prix,
+    difficulte : req.body.difficulte,
+  });
+  Stuff.updateOne({_id : req.params.id}, stuff).then(
+    () => {
+      res.status(201).json({
+        message : 'Updated successfully!'
+      });
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({
+        error : error
+      });
+    }
+  );
 
 }
 

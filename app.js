@@ -3,8 +3,21 @@ const app = express();
 
 const stuffRoutes = require('./routes/stuffRoute');
 
-const mongooseConnect = require('./mongooseConnect');
-mongooseConnect.connectMongoDB();
+const mongoose = require('mongoose');
+require('dotenv').config(); 
+
+const uri = process.env.MONGO_URI;
+
+async function connectMongoDB() {
+  try {
+    await mongoose.connect(uri)
+    console.log('Connexion à MongoDB réussie !');
+  } catch (error) {
+    console.error('Connexion à MongoDB échouée !', error);
+  }
+}
+
+connectMongoDB();
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -13,11 +26,14 @@ app.use((req, res, next) => {
     next();
 });
 
+
+app.get('/', (req, res) => {
+    res.redirect('/static/');
+  });
+  
 app.use(express.json());
 
 app.use('/api/stuff', stuffRoutes);
-
-
 
 
 
